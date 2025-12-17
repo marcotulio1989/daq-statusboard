@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => {
     const base = env.VITE_BASE || (mode === 'production' ? '/daq-statusboard/' : '/');
     return {
       base,
+      // Ajustes de build para produção: desativa sourcemaps e força minificação
+      build: {
+        sourcemap: false,
+        minify: 'esbuild'
+      },
       server: {
         port: 3000,
         host: '0.0.0.0',
