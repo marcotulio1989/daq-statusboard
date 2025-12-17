@@ -104,6 +104,21 @@ export interface AppData {
   flightsList: Flight[];
   statusTags: Tag[];
   timestamp: number;
+  pocoNome?: string;
+  pocoCoordenadas?: string;
+  pocoRota?: string;
+  edsStatus?: string;
+  latchStatus?: string;
+  equipTipo?: string;
+  equipQtd?: number;
+  equipObs?: string;
+  acousticSystem?: string;
+  acousticFreq?: string;
+  acousticObs?: string;
+  weatherStatus?: string;
+  flightStatus?: string;
+  weatherObs?: string;
+  tags?: string;
 }
 
 export const INITIAL_DATA: AppData = {
@@ -160,4 +175,19 @@ export const INITIAL_DATA: AppData = {
   flightsList: [],
   statusTags: [],
   timestamp: Date.now(),
+  pocoNome: '',
+  pocoCoordenadas: '',
+  pocoRota: '',
+  edsStatus: '',
+  latchStatus: '',
+  equipTipo: '',
+  equipQtd: 0,
+  equipObs: '',
+  acousticSystem: '',
+  acousticFreq: '',
+  acousticObs: '',
+  weatherStatus: '',
+  flightStatus: '',
+  weatherObs: '',
+  tags: '',
 };

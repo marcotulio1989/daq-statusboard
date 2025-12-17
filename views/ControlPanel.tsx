@@ -46,7 +46,10 @@ const ControlPanel: React.FC = () => {
     if (activeTab !== 'config') return;
     const updateScale = () => {
       if (previewContainerRef.current) {
-        setPreviewScale(previewContainerRef.current.offsetWidth / 1280);
+        // limit scale to avoid the preview growing larger than its container
+        const raw = previewContainerRef.current.offsetWidth / 1280;
+        const limited = Math.max(0.2, Math.min(1, raw));
+        setPreviewScale(limited);
       }
     };
     updateScale();
@@ -100,7 +103,128 @@ const ControlPanel: React.FC = () => {
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-xl border-2 border-slate-200">
-          {activeTab === 'config' ? (
+          {activeTab === 'well' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">1. POÇO & ROTA</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Nome do Poço</label>
+                    <input type="text" value={data.pocoNome || ''} onChange={e => setData({...data, pocoNome: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Coordenadas</label>
+                    <input type="text" value={data.pocoCoordenadas || ''} onChange={e => setData({...data, pocoCoordenadas: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="LAT, LONG" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Informações da Rota</label>
+                    <textarea value={data.pocoRota || ''} onChange={e => setData({...data, pocoRota: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 h-24" placeholder="Detalhes da rota..."></textarea>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'eds_latch' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">2. EDS & LATCH</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Status EDS</label>
+                    <select value={data.edsStatus || ''} onChange={e => setData({...data, edsStatus: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option>Selecionar</option>
+                      <option>OPERACIONAL</option>
+                      <option>MANUTENÇÃO</option>
+                      <option>INATIVO</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Status LATCH</label>
+                    <select value={data.latchStatus || ''} onChange={e => setData({...data, latchStatus: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option>Selecionar</option>
+                      <option>ENGATED</option>
+                      <option>DESENGATED</option>
+                      <option>DEFEITO</option>
+                    </select>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'equip_cargo' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">4. EQUIP/CARGA</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Tipo de Equipamento</label>
+                    <input type="text" value={data.equipTipo || ''} onChange={e => setData({...data, equipTipo: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Quantidade</label>
+                    <input type="number" value={data.equipQtd || ''} onChange={e => setData({...data, equipQtd: parseInt(e.target.value) || 0})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Observações</label>
+                    <textarea value={data.equipObs || ''} onChange={e => setData({...data, equipObs: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 h-20" placeholder="Notas sobre equipamento/carga..."></textarea>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'acoustic' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">5. ACÚSTICO</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Sistema Acústico</label>
+                    <select value={data.acousticSystem || ''} onChange={e => setData({...data, acousticSystem: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option>Selecionar</option>
+                      <option>ATIVO</option>
+                      <option>INATIVO</option>
+                      <option>TESTE</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Frequência (kHz)</label>
+                    <input type="number" value={data.acousticFreq || ''} onChange={e => setData({...data, acousticFreq: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Observações</label>
+                    <textarea value={data.acousticObs || ''} onChange={e => setData({...data, acousticObs: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 h-20" placeholder="Notas acústicas..."></textarea>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'weather' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">6. PREVISÃO/VOOS</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Previsão Climática</label>
+                    <select value={data.weatherStatus || ''} onChange={e => setData({...data, weatherStatus: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option>Selecionar</option>
+                      <option>FAVORÁVEL</option>
+                      <option>PARCIAL</option>
+                      <option>DESFAVORÁVEL</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Status de Voos</label>
+                    <select value={data.flightStatus || ''} onChange={e => setData({...data, flightStatus: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option>Selecionar</option>
+                      <option>NORMAL</option>
+                      <option>RESTRITO</option>
+                      <option>SUSPENSO</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Detalhes Adicionais</label>
+                    <textarea value={data.weatherObs || ''} onChange={e => setData({...data, weatherObs: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 h-20" placeholder="Informações sobre previsão e voos..."></textarea>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'tags' ? (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">7. TAGS</h2>
+               <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Tags/Anotações</label>
+                    <textarea value={data.tags || ''} onChange={e => setData({...data, tags: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 h-32" placeholder="Digite tags e anotações separadas por quebras de linha..."></textarea>
+                  </div>
+               </div>
+             </div>
+          ) : activeTab === 'config' ? (
              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                <h2 className="text-2xl font-black text-[#002855] border-b-4 border-slate-100 pb-4 mb-6 uppercase">8. CONFIGURAÇÃO</h2>
                
