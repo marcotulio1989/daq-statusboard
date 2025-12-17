@@ -4,7 +4,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
-    const base = env.VITE_BASE || '/';
+    // Use VITE_BASE if definido; em produção, defina por padrão para
+    // o caminho do GitHub Pages do repositório (subpath). Em dev, mantenha '/'.
+    const base = env.VITE_BASE || (mode === 'production' ? '/daq-statusboard/' : '/');
     return {
       base,
       server: {
